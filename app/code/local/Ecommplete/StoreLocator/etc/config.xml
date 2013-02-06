@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author    Marcin Frymark
+ * @email     marcin.frymark@gmail.com
+ */
+-->
+<config>
+    <modules>
+        <Ecommplete_StoreLocator>
+            <version>0.0.1</version>
+        </Ecommplete_StoreLocator>
+    </modules>
+    <global>
+        <helpers>
+            <ecommplete_storeLocator>
+                <class>Ecommplete_StoreLocator_Helper</class>
+            </ecommplete_storeLocator>        
+        </helpers>
+        <blocks>
+            <ecommplete_storeLocator>
+                <class>Ecommplete_StoreLocator_Block</class>
+            </ecommplete_storeLocator>        
+        </blocks>
+        <models>
+            <ecommplete_storeLocator>
+                <class>Ecommplete_StoreLocator_Model</class>
+                <resourceModel>ecommplete_storelocator_resource</resourceModel>
+            </ecommplete_storeLocator>
+            <ecommplete_storelocator_resource>
+                <class>Ecommplete_StoreLocator_Model_Resource</class>
+                <entities>
+                    <store>
+                        <table>ecommplete_store</table>
+                    </store>
+                </entities>
+            </ecommplete_storelocator_resource>
+        </models>
+        <resources>
+            <ecommplete_storeLocator_setup>
+                <setup>
+                    <module>Ecommplete_StoreLocator</module>
+                    <class>Mage_Core_Model_Resource_Setup</class>
+                </setup>
+            </ecommplete_storeLocator_setup>
+        </resources>
+    </global>
+    <admin>
+         <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <ecommplete_storeLocator before="Mage_Adminhtml">Ecommplete_StoreLocator_Adminhtml</ecommplete_storeLocator>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+    <default>
+        <ecommplete_storelocator>
+            <general>
+                <enabled>1</enabled>
+            </general>
+        </ecommplete_storelocator>
+    </default>    
+</config>

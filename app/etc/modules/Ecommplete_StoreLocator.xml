@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Ecommplete_StoreLocator>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Ecommplete_StoreLocator>
+    </modules>
+</config>

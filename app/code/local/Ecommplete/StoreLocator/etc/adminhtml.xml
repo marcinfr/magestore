@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author    Marcin Frymark
+ * @email     marcin.frymark@gmail.com
+ */
+-->
+<config>
+    <menu>
+        <storeloctor translate="title" module="ecommplete_storeLocator">
+            <title>Store Locator</title>
+            <sort_order>41</sort_order>
+            <children>
+                <stores translate="title" module="ecommplete_storeLocator">
+                    <title>Manage Stores</title>
+                    <sort_order>10</sort_order>
+                    <action>adminhtml/store</action>                  
+                </stores>
+                <attributes translate="title" module="ecommplete_storeLocator">
+                    <title>Manage Attributes</title>
+                    <sort_order>20</sort_order>
+                    <action>adminhtml/store_attribute</action>                  
+                </attributes>
+                <configuration translate="title" module="ecommplete_storeLocator">
+                    <title>Configuration</title>
+                    <sort_order>30</sort_order>
+                    <action>adminhtml/system_config/edit/section/ecommplete_storelocator</action>                  
+                </configuration>
+            </children>
+        </storeloctor>    
+    </menu>
+   <acl>
+        <resources>
+            <admin>
+                <children>
+                    <storeloctor>
+                        <children>
+                            <stores translate="title" module="ecommplete_storeLocator">
+                                <title>Manage Stores</title>
+                            </stores>
+                            <attributes translate="title" module="ecommplete_storeLocator">
+                                <title>Manage Attributes</title>
+                            </attributes>
+                            <configuration translate="title" module="ecommplete_storeLocator">
+                                <title>Configuration</title>
+                            </configuration>
+                        </children>
+                    </storeloctor>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <ecommplete_storelocator translate="title" module="ecommplete_storeLocator">
+                                        <title>Store Locator Configuration</title>
+                                        <sort_order>100</sort_order>
+                                    </ecommplete_storelocator>
+                                </children>
+                            </config>
+                        </children>
+                    </system>                    
+                </children>
+            </admin>
+        </resources>
+    </acl>    
+</config>
