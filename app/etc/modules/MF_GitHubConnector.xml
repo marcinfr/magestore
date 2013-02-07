@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author    Marcin Frymark
+ * @email     marcin.frymark@gmail.com
+ */
+-->
+<config>
+    <modules>
+        <MF_GitHubConnector>
+            <active>true</active>
+            <codePool>local</codePool>
+        </MF_GitHubConnector>
+    </modules>
+</config>

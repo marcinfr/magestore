@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author    Marcin Frymark
+ * @email     marcin.frymark@gmail.com
+ */
+-->
+<config>
+    <modules>
+        <MF_GitHubConnector>
+            <version>0.1.0</version>
+        </MF_GitHubConnector>
+    </modules>
+    <global>
+        <models>
+            <mf_gitHubConnector>
+                <class>MF_GitHubConnector_Model</class>
+                <resourceModel>mf_githubconnector_mysql4</resourceModel>
+            </mf_gitHubConnector>
+            <mf_githubconnector_mysql4>
+                <class>MF_GitHubConnector_Model_Mysql4</class>
+				<entities>
+                    <mf_githubconnector_revisions><table>mf_githubconnector_revisions</table></mf_githubconnector_revisions>
+                </entities>
+            </mf_githubconnector_mysql4> 
+        </models>
+        <helpers>
+            <mf_gitHubConnector>
+                <class>MF_GitHubConnector_Helper</class>
+            </mf_gitHubConnector>
+        </helpers>
+        <blocks>
+            <mf_gitHubConnector>
+                <class>MF_GitHubConnector_Block</class>
+            </mf_gitHubConnector>
+        </blocks>
+        <resources>
+            <mf_githubconnector_setup>
+                <setup>
+                    <module>MF_GitHubConnector</module>
+                    <class>Mage_Core_Model_Resource_Setup</class>
+                </setup>
+            </mf_githubconnector_setup>
+        </resources>     
+    </global>
+    <admin>
+         <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <mf_gitHubConnector before="Mage_Adminhtml">MF_GitHubConnector_Adminhtml</mf_gitHubConnector>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+</config>

@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author    Marcin Frymark
+ * @email     marcin.frymark@gmail.com
+ */
+-->
+<config>
+    <menu>
+        <system>
+            <children>
+                <github_connector translate="title">
+                    <title>GitHub Connector</title>
+                    <sort_order>89</sort_order>
+                    <children>
+                        <commits translate="title">
+                            <title>Commits</title>
+                            <action>adminhtml/gitHubConnector_commits</action>
+                        </commits>
+                    </children>
+                </github_connector>
+            </children>
+        </system>    
+    </menu>
+   <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <github_connector translate="title">
+                                <title>GitHub Connector</title>
+                                <children>
+                                    <commits translate="title">
+                                        <title>Commits</title>
+                                    </commits>
+                                </children>
+                            </github_connector>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>    
+</config>
