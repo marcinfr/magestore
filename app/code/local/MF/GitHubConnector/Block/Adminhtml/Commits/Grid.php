@@ -12,15 +12,15 @@ class MF_GitHubConnector_Block_Adminhtml_Commits_Grid extends Mage_Adminhtml_Blo
         $this->setId('gitHub_commits_grid');
         $this->setSaveParametersInSession(true);   
         $this->setUseAjax(true);
-        $this->setPagerVisibility(false);
     }
 
 	protected function _prepareColumns()
     {
 	    $this->addColumn('committer_date', 
 			array(
-				'header' => Mage::helper('mf_gitHubConnector')->__('Date'),
+				'header' => Mage::helper('mf_gitHubConnector')->__('Commited Date'),
 				'index'  => 'committer_date',
+                'type' => 'datetime',
         ));
     
 	    $this->addColumn('sha', 
@@ -53,20 +53,33 @@ class MF_GitHubConnector_Block_Adminhtml_Commits_Grid extends Mage_Adminhtml_Blo
 				'index'  => 'status',
         ));
         
+	    $this->addColumn('publisher_date', 
+			array(
+				'header' => Mage::helper('mf_gitHubConnector')->__('Published Date'),
+				'index'  => 'publisher_date',
+                'type' => 'datetime',
+        ));
+        
+	    $this->addColumn('publisher_name', 
+			array(
+				'header' => Mage::helper('mf_gitHubConnector')->__('Publisher Name'),
+				'index'  => 'publisher_name',
+        ));
+        
 		return parent::_prepareColumns();
 	}
 
     protected function _prepareCollection()
     {
-        $collection = Mage::getModel('mf_gitHubConnector/commits')->getCollection();
+        $collection = Mage::getModel('mf_gitHubConnector/commit')->getCollection();
         $this->setCollection($collection);
 
         return parent::_prepareCollection();
     }
 
-    public function getRowUrl($item)
+    public function getRowUrl($row)
     {
-        return false;
+        return $this->getUrl('*/*/view', array('id'=>$row->getId()));
     }    
     
 }

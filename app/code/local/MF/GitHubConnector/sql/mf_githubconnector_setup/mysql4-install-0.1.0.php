@@ -18,6 +18,8 @@ CREATE TABLE {$this->getTable('mf_githubconnector_revisions')} (
   `committer_date` datetime default NULL,
   `message` text default NULL,
   `status` int,
+  `publisher_name` varchar(255) default NULL,
+  `publisher_date` datetime default NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -16,6 +16,12 @@ class MF_GitHubConnector_Model_GitHubApi_V3
         return Mage::helper('core')->jsonDecode($result);
     }
     
+    public function getDataByUrl($url)
+    {
+        $result = $this->_requestUrl($url);
+        return Mage::helper('core')->jsonDecode($result);
+    }
+    
     protected function _authorization()
     {
         https://github.com/login/oauth/authorize
@@ -30,6 +36,11 @@ class MF_GitHubConnector_Model_GitHubApi_V3
     protected function _doRequest($path)
     {
         $url = 'https://api.github.com/' . trim($path, '/');
+        return $this->_requestUrl($url);
+    }
+    
+    protected function _requestUrl($url)
+    {
         $httpClient = new Zend_Http_Client($url);
         $response = $httpClient->request(Zend_Http_Client::GET);
         return $response->getBody();
