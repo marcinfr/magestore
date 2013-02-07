@@ -8,7 +8,7 @@
     public function updateCommits()
     {
         $commits = array();
-        $commitsCollection = Mage::getModel('mf_gitHubConnector/commits')->getCollection();
+        $commitsCollection = Mage::getModel('mf_gitHubConnector/commit')->getCollection();
         foreach($commitsCollection as $commit) {
             $commits[$commit->getSha()] = true;
         }
@@ -20,7 +20,7 @@
             $sha = $gitHubcommit['sha'];
             if (!isset($commits[$sha])) {
                 //var_dump($gitHubcommit); die();
-                $newCommit = Mage::getModel('mf_gitHubConnector/commits');
+                $newCommit = Mage::getModel('mf_gitHubConnector/commit');
                 $newCommit->setSha($gitHubcommit['sha']);
                 $newCommit->setUrl($gitHubcommit['url']);
                 $newCommit->setCommitterName($gitHubcommit['commit']['committer']['name']);
