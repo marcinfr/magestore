@@ -30,40 +30,19 @@ class MF_GitHubConnector_Block_Adminhtml_Commits_Confirm_Form extends Mage_Admin
             'text'      => $commit->getCommitterName() . ' (' . $commit->getCommitterEmail() . ')',
             'label'     => $this->__('Commiter'),
         ));
-        
-        $publicationFieldset = $form->addFieldset('publication', array('legend'=>Mage::helper('mf_gitHubConnector')->__('Publication')));
-        
-        $publicationFieldset->addField('status', 'note', array(
-            'text'      => $commit->getTextStatus(),
-            'label'     => $this->__('Status'),
-        ));
-        
-        if ($commit->isPublished()) {
-            $publicationFieldset->addField('publication_date', 'note', array(
-                'text'      => $commit->getPublisherDate(),
-                'label'     => $this->__('Publication Date'),
-            ));
-        
-            $publicationFieldset->addField('publisher', 'note', array(
-                'text'      => $commit->getPublisherName(),
-                'label'     => $this->__('Publisher'),
-            ));
-        }
-        
+
         $filesFieldset = $form->addFieldset('files', array('legend'=>Mage::helper('mf_gitHubConnector')->__('Files')));
         
         $files = $commit->getFiles();
         
         foreach($files as $key => $file) {
-            
-            $conflicts = $file->getConflicts();
-
             $afterElementHtml = '<br/><small><ul>';
             $afterElementHtml .= '<li>' . $file->getChanges() . ' ' . $this->__('changes') . ' : ' . $file->getAdditions() . ' ' . $this->__('additions') . ', ' . $file->getDeletions() . ' ' . $this->__('deletions') . '</li>';
             
-            if (empty($conflicts)) {
+            if (!$file->isConflicted()) {
                 $afterElementHtml .= '<li style = "color:green">' . $this->__('No conflicts') . '</li>';
             } else {
+                $conflicts = $file->getConflicts();
                 $afterElementHtml .= '<li style = "color:red"><b>' . $this->__('Detected conflicts:') . '</b></li>';
                 foreach($conflicts as $conflict) {
                     $afterElementHtml .= '<li style = "color:red">' . $conflict . '</li>';
@@ -77,6 +56,13 @@ class MF_GitHubConnector_Block_Adminhtml_Commits_Confirm_Form extends Mage_Admin
                 'label'     => $this->__($file->getStatus()),
                 'after_element_html' => $afterElementHtml,
             ));
+            
+            if ($file->isConflicted()) {
+                $filesFieldset->addField('file_' . $key . '_action', 'select', array(
+                    'label'     => '',
+                    'values'    => array(0 => $this->__('Skip this file'), 1 => $this->__('Replace this file')),
+                ));
+            }
         }
         
         foreach($files as $key => $file) {
