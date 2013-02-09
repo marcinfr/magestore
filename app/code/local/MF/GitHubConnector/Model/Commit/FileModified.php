@@ -8,8 +8,6 @@ class MF_GitHubConnector_Model_Commit_FileModified extends MF_GitHubConnector_Mo
     protected function _publish()
     {
         $this->_doCopy();
-
-        die();
     }
     
     protected function _revertChanges()
@@ -30,8 +28,6 @@ class MF_GitHubConnector_Model_Commit_FileModified extends MF_GitHubConnector_Mo
             return array($conflict);
         }
         
-        $this->_checkPatches();
-        
-        return array();
+        return $this->_checkPatches();
     }
 }
