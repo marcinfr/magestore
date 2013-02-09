@@ -9,6 +9,8 @@ class MF_GitHubConnector_Helper_Conflict extends Mage_Core_Helper_Abstract
     const CONFLICT_TYPE_FILE_EXISTS = 2;
     const CONFLICT_TYPE_FILE_NOT_EXISTS = 3;
     const CONFLICT_TYPE_FILE_NOT_WRITABLE = 4;
+    const CONFLICT_TYPE_FILE_NO_CHANGES = 5;
+    const CONFLICT_TYPE_FILE_CONFLICTED = 6;
 
     const CONFLICT_ACTION_SKIP = 'skip';
     const CONFLICT_ACTION_OVERWRITE = 'overwrite';
@@ -29,7 +31,7 @@ class MF_GitHubConnector_Helper_Conflict extends Mage_Core_Helper_Abstract
             ),
             self::CONFLICT_ACTION_CREATE => array(
                 'label' => $this->__('Create file'),
-            ),          
+            ),
         );
     }
     
@@ -60,6 +62,19 @@ class MF_GitHubConnector_Helper_Conflict extends Mage_Core_Helper_Abstract
                 'label' => 'File is not writable.',
                 'actions' => array(
                     self::CONFLICT_ACTION_SKIP,
+                ),
+            ),
+            self::CONFLICT_TYPE_FILE_NO_CHANGES => array(
+                'label' => 'Changes are already published.',
+                'actions' => array(
+                    self::CONFLICT_ACTION_SKIP,
+                ),
+            ),
+            self::CONFLICT_TYPE_FILE_CONFLICTED => array(
+                'label' => 'Changes are conflicted.',
+                'actions' => array(
+                    self::CONFLICT_ACTION_SKIP,
+                    self::CONFLICT_ACTION_OVERWRITE,
                 ),
             ),
         );
