@@ -9,6 +9,7 @@ class MF_GitHubConnector_Model_Commit_FileRemoved extends MF_GitHubConnector_Mod
     {
         $this->_doCopy();
     }
+    ok
     
     protected function _revertChanges()
     {
@@ -22,7 +23,7 @@ class MF_GitHubConnector_Model_Commit_FileRemoved extends MF_GitHubConnector_Mod
             $conflict = $this->_conflictHelper->getConflict(MF_GitHubConnector_Helper_Conflict::CONFLICT_TYPE_FILE_NOT_EXISTS);
             return array($conflict);
         }
-        
+    ok  
         if (!is_writable($test)) {
             $conflict = $this->_conflictHelper->getConflict(MF_GitHubConnector_Helper_Conflict::CONFLICT_TYPE_FILE_NOT_WRITABLE);
             return array($conflict);
