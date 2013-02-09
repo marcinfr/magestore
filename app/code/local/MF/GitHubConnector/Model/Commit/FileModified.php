@@ -8,13 +8,7 @@ class MF_GitHubConnector_Model_Commit_FileModified extends MF_GitHubConnector_Mo
     protected function _publish()
     {
         $this->_doCopy();
-        
-        //$patch = explode("\n", $this->getPatch());
-        //var_dump($this->getPatches());
-        
-        //$sourcefile = file($this->getFilepath());
-        //var_dump($sourcefile);
-        
+
         die();
     }
     
@@ -35,6 +29,8 @@ class MF_GitHubConnector_Model_Commit_FileModified extends MF_GitHubConnector_Mo
             $conflict = $this->_conflictHelper->getConflict(MF_GitHubConnector_Helper_Conflict::CONFLICT_TYPE_FILE_NOT_WRITABLE);
             return array($conflict);
         }
+        
+        $this->_checkPatches();
         
         return array();
     }
