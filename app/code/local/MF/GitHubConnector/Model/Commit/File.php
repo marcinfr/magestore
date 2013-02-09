@@ -12,6 +12,8 @@ class MF_GitHubConnector_Model_Commit_File extends Mage_Core_Model_Abstract
     protected $_conflicts;
     protected $_filepath;
     protected $_conflictHelper;
+    protected $_sourceFileContent;
+    protected $_resultFileContent;
     
     protected function _construct()
     {
@@ -32,8 +34,7 @@ class MF_GitHubConnector_Model_Commit_File extends Mage_Core_Model_Abstract
     
     public function publish()
     {
-        // TODO: check conflicts and if proper action is selected
-    
+        $conflicts = $this->_checkConflicts();
         return $this->_publish();
     }
     
@@ -108,6 +109,119 @@ class MF_GitHubConnector_Model_Commit_File extends Mage_Core_Model_Abstract
     
     protected function _getPatches()
     {
-        $patch = $this->getPatch();
+        $patchLines = explode("\n", $this->getPatch());
+        
+        $patches = array();
+        $patch = null;
+        
+        foreach($patchLines as $line) {
+            if (substr($line, 0, 2) == '@@') {
+                if (!is_null($patch)) {
+                    $patches[] = $patch;
+                }
+                list($empty, $hunk, $hunkLine) = explode('@@', $line);
+                $hunk = trim($hunk);
+                
+                list($hunk1, $hunk2) = explode(' ', $hunk);
+                
+                list($afterPointer) = explode(',', $hunk2);
+                list($beforePointer) = explode(',', $hunk1);
+                $afterPointer = abs((int)$afterPointer);
+                $beforePointer = abs((int)$beforePointer);
+            
+                $patch = array(
+                        'beforePointer' => $beforePointer - 1,
+                        'afterPointer' => $afterPointer - 1,
+                        'lines'   => array(),
+                    );
+                continue;
+            }
+            
+            $patch['lines'][] = $line;
+        }
+
+        if (!is_null($patch)) {
+            $patches[] = $patch;
+        }
+
+        return $patches;
+    }
+    
+    protected function _getSourceFileContent()
+    {
+        if (is_null($this->_sourceFileContent)) {
+            return $this->_sourceFileContent = file($this->getFilepath());
+        }
+        
+        return $this->_sourceFileContent;
+    }
+    
+    protected function _checkPatches()
+    {
+        $patches = $this->_getPatches();
+        $sourceContent = $this->_getSourceFileContent();
+        
+        $this->_resultFileContent = array();
+        
+        $sourcePointer = 0;
+        $resultPointer = 0;
+        $offset = 0;
+        
+        foreach($patches as $patch) {
+            for($i = $sourcePointer; $i < $patch['beforePointer'] + $offset; $i++) {
+                $this->_resultFileContent[$resultPointer] = $sourceContent[$i];
+                $resultPointer++;
+                $sourcePointer++;
+            }
+            $error = null;
+            foreach($patch['lines'] as $line) {
+                if ($line[0] == '-') {
+                    $line = substr($line, 1);
+                    if (!isset($sourceContent[$sourcePointer]) || trim($line) != trim($sourceContent[$sourcePointer])) {
+                        $offset--;
+                        var_dump('already published');
+                    }
+                } else if ($line['0'] == '+') {
+                    $line = substr($line, 1);
+                    if (isset($sourceContent[$sourcePointer]) && trim($line) == trim($sourceContent[$sourcePointer])) {
+                        var_dump( 'already published');
+                        $sourcePointer++;
+                        $offset++;
+                        continue;
+                    }
+                    $this->_resultFileContent[$resultPointer] = $line;
+                    $resultPointer++;
+                } else {
+                    if (isset($sourceContent[$sourcePointer]) && trim($line) == trim($sourceContent[$sourcePointer])) {
+                        $this->_resultFileContent[$resultPointer] = $line;
+                    } else {
+                        $t = isset($sourceContent[$sourcePointer]) ? $sourceContent[$sourcePointer] : '---';
+                        var_dump('error = ' . $line . ' = ' . $t);
+                    }
+                    $sourcePointer++;
+                    $resultPointer++;
+                }
+            }
+        }
+        while(isset($sourceContent[$sourcePointer])) {
+            $this->_resultFileContent[$resultPointer] = $sourceContent[$sourcePointer];
+            $resultPointer++;
+            $sourcePointer++;
+        }
+
+        foreach($this->_resultFileContent as $line) {
+            //echo $line . '<br/>';
+        }
+        
+        return array();
+    }
+    
+    protected function _getResultFileContent()
+    {
+        if (!$this->_resultFileContent) {
+            $this->_checkPatches();
+        }
+        
+        return $this->_resultFileContent;
     }
 }
