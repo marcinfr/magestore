@@ -9,6 +9,15 @@ class MF_GitHubConnector_Block_Adminhtml_Commits_View_Form extends Mage_Adminhtm
 
         $form = new Varien_Data_Form(); 
    
+        if ($commit->getConnectionError()) {
+            $errorFieldset = $form->addFieldset('errors', array('legend'=>Mage::helper('mf_gitHubConnector')->__('Errors')));
+        
+            $errorFieldset->addField('connection_error', 'note', array(
+                'text'      => $commit->getConnectionError(),
+                'label'     => $this->__('Connection Error'),
+            ));
+        }
+   
         $generalFieldset = $form->addFieldset('general', array('legend'=>Mage::helper('mf_gitHubConnector')->__('General')));
     
         $generalFieldset->addField('sha', 'note', array(
@@ -50,15 +59,17 @@ class MF_GitHubConnector_Block_Adminhtml_Commits_View_Form extends Mage_Adminhtm
             ));
         }
         
-        $filesFieldset = $form->addFieldset('files', array('legend'=>Mage::helper('mf_gitHubConnector')->__('Files')));
+        if (!$commit->getConnectionError()) {
+            $filesFieldset = $form->addFieldset('files', array('legend'=>Mage::helper('mf_gitHubConnector')->__('Files')));
         
-        $files = $commit->getFiles();
+            $files = $commit->getFiles();
         
-        foreach($files as $key => $file) {
-            $filesFieldset->addField('file_' . $key, 'note', array(
-                'text'      => $file->getFilename(),
-                'label'     => $this->__($file->getStatus()),
-            ));
+            foreach($files as $key => $file) {
+                $filesFieldset->addField('file_' . $key, 'note', array(
+                    'text'      => $file->getFilename(),
+                    'label'     => $this->__($file->getStatus()),
+                ));
+            }
         }
         
         $this->setForm($form);

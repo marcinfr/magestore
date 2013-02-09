@@ -45,7 +45,7 @@ class MF_GitHubConnector_Block_Adminhtml_Commits_Confirm_Form extends Mage_Admin
                 $conflicts = $file->getConflicts();
                 $afterElementHtml .= '<li style = "color:red"><b>' . $this->__('Detected conflicts:') . '</b></li>';
                 foreach($conflicts as $conflict) {
-                    $afterElementHtml .= '<li style = "color:red">' . $conflict . '</li>';
+                    $afterElementHtml .= '<li style = "color:red">' . $conflict['label'] . '</li>';
                 }
             }
             
@@ -58,9 +58,10 @@ class MF_GitHubConnector_Block_Adminhtml_Commits_Confirm_Form extends Mage_Admin
             ));
             
             if ($file->isConflicted()) {
+                $actionOptions = $file->getConflictActionOptions();
                 $filesFieldset->addField('file_' . $key . '_action', 'select', array(
                     'label'     => '',
-                    'values'    => array(0 => $this->__('Skip this file'), 1 => $this->__('Replace this file')),
+                    'values'    => $actionOptions,
                 ));
             }
         }

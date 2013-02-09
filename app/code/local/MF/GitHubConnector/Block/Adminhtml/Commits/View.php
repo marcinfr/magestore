@@ -28,11 +28,13 @@ class MF_GitHubConnector_Block_Adminhtml_Commits_View extends Mage_Adminhtml_Blo
                 'onclick'   => "setLocation('{$this->getUrl('*/*/')}')",
             ));
         
-            $this->_addButton('publish', array(
-                'label'     => Mage::helper('mf_gitHubConnector')->__('Publish'),
-                'onclick'   => "setLocation('{$this->getUrl('*/*/confirm', array('id' => $this->getCommit()->getId()))}')",
-                'class'     => 'save',
-            ));
+            if (!$this->getCommit()->getConnectionError()) {
+                $this->_addButton('publish', array(
+                    'label'     => Mage::helper('mf_gitHubConnector')->__('Publish'),
+                    'onclick'   => "setLocation('{$this->getUrl('*/*/confirm', array('id' => $this->getCommit()->getId()))}')",
+                    'class'     => 'save',
+                ));
+            }
         }
     }
 

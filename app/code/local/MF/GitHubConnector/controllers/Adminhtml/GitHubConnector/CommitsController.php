@@ -55,24 +55,51 @@ class MF_GitHubConnector_Adminhtml_GitHubConnector_CommitsController extends Mag
     public function viewAction()
     {
         $this->_initCommit();
-        $this->loadLayout();
-        $this->_addContent($this->getLayout()->createBlock('mf_gitHubConnector/adminhtml_commits_view'));
-        $this->renderLayout();
+        $commit = Mage::registry('current_commit');
+        
+        if (!$commit->getId()) {
+            $this->_getSession()->addError($this->__('Wrong commit Id.'));
+            $this->_redirect('*/*/index', array('id' => $commit->getId()));
+        } else {
+            $this->loadLayout();
+            $this->_addContent($this->getLayout()->createBlock('mf_gitHubConnector/adminhtml_commits_view'));
+            $this->renderLayout();
+        }
     }
     
     public function confirmAction()
     {
         $this->_initCommit();
-        
         $commit = Mage::registry('current_commit');
         
-        if (!$commit->isPublished()) {
+        if (!$commit->getId()) {
+            $this->_getSession()->addError($this->__('Wrong commit Id.'));
+            $this->_redirect('*/*/index', array('id' => $commit->getId()));
+        } else if ($commit->isPublished()) {
+            $this->_getSession()->addError($this->__('This commit has been already published.'));
+            $this->_redirect('*/*/view', array('id' => $commit->getId()));
+        } else if ($commit->getConnectionError()) {
+            $this->_getSession()->addError($this->__('Connection error:') . ' ' . $commit->getConnectionError());
+            $this->_redirect('*/*/view', array('id' => $commit->getId()));        
+        } else {
             $this->loadLayout();
             $this->_addContent($this->getLayout()->createBlock('mf_gitHubConnector/adminhtml_commits_confirm'));
             $this->renderLayout();
-        } else {
-            $this->_getSession()->addError($this->__('This commit has been already published.'));
-            $this->_redirect('*/*/view', array('id' => $commit->getId()));
         }
+    }
+    
+    public function publishAction()
+    {
+        $this->_initCommit();
+        $commit = Mage::registry('current_commit');
+        
+        try {
+            $commit->publish();
+            $this->_getSession()->addSuccess($this->__('Commit has been published.'));
+        } catch (Exception $e) {
+            $this->_getSession()->addError($e->getMessage());
+        }
+        
+        $this->_redirect('*/*/view', array('id' => $commit->getId()));
     }
 }

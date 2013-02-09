@@ -10,6 +10,47 @@ class MF_GitHubConnector_Model_Commit_File extends Mage_Core_Model_Abstract
     const FILE_STATUS_REMOVED  = 'removed';
     
     protected $_conflicts;
+    protected $_filepath;
+    protected $_conflictHelper;
+    
+    protected function _construct()
+    {
+        $this->_conflictHelper = Mage::helper('mf_gitHubConnector/conflict');
+        return parent::_construct();
+    }
+    
+    public function getFilepath()
+    {
+        if (is_null($this->_filepath)) {
+            $filename = $this->getFilename();
+            $filename = implode(DS, explode('/', $filename));
+            $filename = implode(DS, explode('\\', $filename));
+            $this->_filepath = BP . DS . $filename;
+        }
+        return $this->_filepath;
+    }
+    
+    public function publish()
+    {
+        // TODO: check conflicts and if proper action is selected
+    
+        return $this->_publish();
+    }
+    
+    protected function _publish()
+    {
+        Mage::throwExcaption(Mage::helper('mf_gitHubConnector')->__('Can\'t publish file with status ') . $this->getStatus());
+    }
+    
+    public function revertChanges()
+    {
+        return $this->_revertChanges();
+    }
+    
+    protected function _revertChanges()
+    {
+        Mage::throwExcaption(Mage::helper('mf_gitHubConnector')->__('Can\'t revert changes  for file with status ') . $this->getStatus());
+    }
 
     public function isConflicted()
     {
@@ -23,39 +64,50 @@ class MF_GitHubConnector_Model_Commit_File extends Mage_Core_Model_Abstract
     public function getConflicts()
     {
         if (is_null($this->_conflicts)) {
-            switch($this->getStatus()) {
-                case self::FILE_STATUS_ADDED:
-                    $this->_conflicts = $this->_checkAddedFile();
-                    break;
-                case self::FILE_STATUS_MODIFIED:
-                    $this->_conflicts = $this->_checkModifiedFile();
-                    break;
-                case self::FILE_STATUS_REMOVED:
-                    $this->_conflicts = $this->_checkRemovedFile();
-                    break;
-                default:
-                    $this->_conflicts = array(Mage::helper('mf_gitHubConnector')->__('Wrong file status.'));
-            }
+            $this->_conflicts = $this->_checkConflicts();
         }
         
         return $this->_conflicts;
     }
 
-    protected function _checkAddedFile()
+    public function getConflictActionOptions()
     {
-        $conflicts = array();
-        return $conflicts;
+        $conflicts = $this->getConflicts();
+        $actions = $this->_conflictHelper->getConflictActions($conflicts);
+
+        $actionOptions = array();
+        foreach($actions as $key => $action) {
+            $actionOptions[$key] = $action['label'];
+        }
+        
+        return $actionOptions;
     }
     
-    protected function _checkModifiedFile()
+    protected function _checkConflicts()
     {
-        $conflicts = array();
-        return $conflicts;
+        return array($this->_conflictHelper->getConflict(MF_GitHubConnector_Helper_Conflict::CONFLICT_TYPE_WRONG_STATUS));
+    }
+
+    protected function _doCopy()
+    {
+        $copiesDirectory = BP . DS . 'GitHubCopiesDirectory' . DS;
+
+        if (!is_dir($copiesDirectory)) {
+            mkdir($copiesDirectory);
+        }
+
+        $copyDirectory = $copiesDirectory . substr(md5($this->getFilename()), 0, 2) . DS;
+        
+        if (!is_dir($copyDirectory)) {
+            mkdir($copyDirectory);
+        }
+
+        $copyFilename = time() . '_' . $this->getCommit()->getSha() . '_' . md5($this->getFilename()) . '.copy';
+        copy($this->getFilepath(), $copyDirectory . $copyFilename);
     }
     
-    protected function _checkRemovedFile()
+    protected function _getPatches()
     {
-        $conflicts = array();
-        return $conflicts;
+        $patch = $this->getPatch();
     }
 }
