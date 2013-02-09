@@ -23,7 +23,7 @@ class MF_GitHubConnector_Model_Commit_FileRemoved extends MF_GitHubConnector_Mod
             return array($conflict);
         }
         
-        if (!is_writable($path)) {
+        if (!is_writable($test)) {
             $conflict = $this->_conflictHelper->getConflict(MF_GitHubConnector_Helper_Conflict::CONFLICT_TYPE_FILE_NOT_WRITABLE);
             return array($conflict);
         }
