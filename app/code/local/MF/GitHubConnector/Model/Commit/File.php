@@ -195,6 +195,7 @@ class MF_GitHubConnector_Model_Commit_File extends Mage_Core_Model_Abstract
                     }
                     $this->_resultFileContent[$resultPointer] = $line;
                     $resultPointer++;
+                } else if ($line == '\ No newline at end of file') {
                 } else {
                     if (isset($sourceContent[$sourcePointer]) && trim($line) == trim($sourceContent[$sourcePointer])) {
                         $this->_resultFileContent[$resultPointer] = $line;
