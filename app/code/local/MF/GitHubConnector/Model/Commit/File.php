@@ -178,6 +178,7 @@ class MF_GitHubConnector_Model_Commit_File extends Mage_Core_Model_Abstract
                 if ($line[0] == '-') {
                     $line = substr($line, 1);
                     if (!isset($sourceContent[$sourcePointer]) || trim($line) != trim($sourceContent[$sourcePointer])) {
+                        $offset--;
                         var_dump('already published');
                     }
                 } else if ($line['0'] == '+') {
@@ -194,7 +195,8 @@ class MF_GitHubConnector_Model_Commit_File extends Mage_Core_Model_Abstract
                     if (isset($sourceContent[$sourcePointer]) && trim($line) == trim($sourceContent[$sourcePointer])) {
                         $this->_resultFileContent[$resultPointer] = $line;
                     } else {
-                        var_dump('error = ' . $line);
+                        $t = isset($sourceContent[$sourcePointer]) ? $sourceContent[$sourcePointer] : '---';
+                        var_dump('error = ' . $line . ' = ' . $t);
                     }
                     $sourcePointer++;
                     $resultPointer++;
