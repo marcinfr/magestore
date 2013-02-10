@@ -225,8 +225,18 @@ class MF_GitHubConnector_Model_Commit_File extends Mage_Core_Model_Abstract
     {
         if (!$this->_resultFileContent) {
             $conflicts = $this->_checkPatches();
+            if ($this->isConflicted()) {
+                Mage::throwException(Mage::helper('mf_gitHubConnector')->__('Detected Conflicts'));
+            }
         }
         
         return $this->_resultFileContent;
+    }
+    
+    protected function _saveResultFile()
+    {
+        $filename = $this->getFilepath();
+        $contents = implode('\n', $this->_getResultFileContent());
+        file_put_contents($filename, $contents);
     }
 }
