@@ -39,39 +39,39 @@ class MF_GitHubConnector_Helper_Conflict extends Mage_Core_Helper_Abstract
     {
         return array(
             self::CONFLICT_TYPE_WRONG_STATUS => array(
-                'label' => 'Wrong status.',
+                'label' => $this->__('Wrong status.'),
                 'actions' => array(
                     self::CONFLICT_ACTION_SKIP,
                 ),
             ),    
             self::CONFLICT_TYPE_FILE_EXISTS => array(
-                'label' => 'File already exists.',
+                'label' => $this->__('File already exists.'),
                 'actions' => array(
                     self::CONFLICT_ACTION_SKIP,
                     self::CONFLICT_ACTION_OVERWRITE,
                 ),
             ),
             self::CONFLICT_TYPE_FILE_NOT_EXISTS => array(
-                'label' => 'File doesn\'t exist.',
+                'label' => $this->__('File doesn\'t exist.'),
                 'actions' => array(
                     self::CONFLICT_ACTION_SKIP,
                     self::CONFLICT_ACTION_CREATE,
                 ),
             ),
             self::CONFLICT_TYPE_FILE_NOT_WRITABLE => array(
-                'label' => 'File is not writable.',
+                'label' => $this->__('File is not writable.'),
                 'actions' => array(
                     self::CONFLICT_ACTION_SKIP,
                 ),
             ),
             self::CONFLICT_TYPE_FILE_NO_CHANGES => array(
-                'label' => 'Changes are already published.',
+                'label' => $this->__('Changes seems already published.'),
                 'actions' => array(
                     self::CONFLICT_ACTION_SKIP,
                 ),
             ),
             self::CONFLICT_TYPE_FILE_CONFLICTED => array(
-                'label' => 'Changes are conflicted.',
+                'label' => $this->__('Changes are conflicted.'),
                 'actions' => array(
                     self::CONFLICT_ACTION_SKIP,
                     self::CONFLICT_ACTION_OVERWRITE,

@@ -173,44 +173,49 @@ class MF_GitHubConnector_Model_Commit_File extends Mage_Core_Model_Abstract
                 $resultPointer++;
                 $sourcePointer++;
             }
-            $error = null;
+            $conflict = null;
             foreach($patch['lines'] as $line) {
                 if ($line[0] == '-') {
                     $line = substr($line, 1);
                     if (!isset($sourceContent[$sourcePointer]) || trim($line) != trim($sourceContent[$sourcePointer])) {
                         $offset--;
-                        var_dump('already published');
+                        if (!$conflict) {
+                            $conflict = MF_GitHubConnector_Helper_Conflict::CONFLICT_TYPE_FILE_NO_CHANGES;
+                        }
                     }
                 } else if ($line['0'] == '+') {
                     $line = substr($line, 1);
                     if (isset($sourceContent[$sourcePointer]) && trim($line) == trim($sourceContent[$sourcePointer])) {
-                        var_dump( 'already published');
+                        if (!$conflict) {
+                            $conflict = MF_GitHubConnector_Helper_Conflict::CONFLICT_TYPE_FILE_NO_CHANGES;
+                        }
                         $sourcePointer++;
                         $offset++;
                         continue;
                     }
                     $this->_resultFileContent[$resultPointer] = $line;
                     $resultPointer++;
+                } else if ($line == '\ No newline at end of file') {
                 } else {
                     if (isset($sourceContent[$sourcePointer]) && trim($line) == trim($sourceContent[$sourcePointer])) {
                         $this->_resultFileContent[$resultPointer] = $line;
                     } else {
-                        $t = isset($sourceContent[$sourcePointer]) ? $sourceContent[$sourcePointer] : '---';
-                        var_dump('error = ' . $line . ' = ' . $t);
+                        $conflict = MF_GitHubConnector_Helper_Conflict::CONFLICT_TYPE_FILE_CONFLICTED;
                     }
                     $sourcePointer++;
                     $resultPointer++;
                 }
             }
         }
+        
+        if ($conflict) {
+            return array($this->_conflictHelper->getConflict($conflict));
+        }
+        
         while(isset($sourceContent[$sourcePointer])) {
             $this->_resultFileContent[$resultPointer] = $sourceContent[$sourcePointer];
             $resultPointer++;
             $sourcePointer++;
-        }
-
-        foreach($this->_resultFileContent as $line) {
-            //echo $line . '<br/>';
         }
         
         return array();
@@ -219,9 +224,19 @@ class MF_GitHubConnector_Model_Commit_File extends Mage_Core_Model_Abstract
     protected function _getResultFileContent()
     {
         if (!$this->_resultFileContent) {
-            $this->_checkPatches();
+            $conflicts = $this->_checkPatches();
+            if ($this->isConflicted()) {
+                Mage::throwException(Mage::helper('mf_gitHubConnector')->__('Detected Conflicts'));
+            }
         }
         
         return $this->_resultFileContent;
+    }
+    
+    protected function _saveResultFile()
+    {
+        $filename = $this->getFilepath();
+        $contents = implode('\n', $this->_getResultFileContent());
+        file_put_contents($filename, $contents);
     }
 }
