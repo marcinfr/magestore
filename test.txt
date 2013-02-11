@@ -8,13 +8,10 @@ class MF_GitHubConnector_Model_Commit_FileRemoved extends MF_GitHubConnector_Mod
     protected function _publish()
     {
         $this->_doCopy();
+        return $this->_publish();
     }
     ok
-    
-    protected function _revertChanges()
-    {
-    }
- 
+
     protected function _checkRemovedFile()
     {
         $path = $this->getFilepath();
@@ -22,14 +19,31 @@ class MF_GitHubConnector_Model_Commit_FileRemoved extends MF_GitHubConnector_Mod
         if (!file_exists($path)) {
             $conflict = $this->_conflictHelper->getConflict(MF_GitHubConnector_Helper_Conflict::CONFLICT_TYPE_FILE_NOT_EXISTS);
             return array($conflict);
-        }
-    ok  
+        }  
         if (!is_writable($test)) {
             $conflict = $this->_conflictHelper->getConflict(MF_GitHubConnector_Helper_Conflict::CONFLICT_TYPE_FILE_NOT_WRITABLE);
             return array($conflict);
         }
         
-        return array();
+        return false;
     }
 
+    protected function _getResultFileContent()
+    {
+        if (!$this->_resultFileContent) {
+            $conflicts = $this->_checkPatches();
+            if ($this->isConflicted()) {
+                Mage::throwException(Mage::helper('mf_gitHubConnector')->__('Detected Conflicts'));
+            }
+        }
+        
+        return $this->_resultFileContent;
+    }
+    
+    protected function _saveResultFile()
+    {
+        $filename = $this->getFilepath();
+        $contents = $this->_getResultFileContent();
+        file_put_contents($filename, $contents);
+    }
 }
