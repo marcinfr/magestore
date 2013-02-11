@@ -102,4 +102,27 @@ class MF_GitHubConnector_Adminhtml_GitHubConnector_CommitsController extends Mag
         
         $this->_redirect('*/*/view', array('id' => $commit->getId()));
     }
+    
+    public function setAsPublishedAction()
+    {
+        $this->_initCommit();
+        $commit = Mage::registry('current_commit');
+        
+        if (!$commit->getId()) {
+            $this->_getSession()->addError($this->__('Wrong commit Id.'));
+            $this->_redirect('*/*/index', array('id' => $commit->getId()));
+        } else if ($commit->isPublished()) {
+            $this->_getSession()->addError($this->__('This commit has been already published.'));
+            $this->_redirect('*/*/view', array('id' => $commit->getId()));
+        } else {
+            try {
+                $commit->setAsPublished(MF_GitHubConnector_Model_Commit::MANUALLY_PUBLISHED_STATUS);
+                $commit->save();
+                $this->_getSession()->addSuccess($this->__('Commit has been set as published.'));
+            }  catch (Exception $e) {
+                $this->_getSession()->addError($e->getMessage());
+            }
+            $this->_redirect('*/*/view', array('id' => $commit->getId()));
+        }
+    }
 }

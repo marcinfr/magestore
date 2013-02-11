@@ -7,6 +7,8 @@ class MF_GitHubConnector_Model_Commit_FileAdded extends MF_GitHubConnector_Model
 {
     protected function _publish()
     {
+        $this->_createDirectories();
+        $this->_saveResultFile();
     }
     
     protected function _revertChanges()
@@ -22,6 +24,6 @@ class MF_GitHubConnector_Model_Commit_FileAdded extends MF_GitHubConnector_Model
             return array($conflict);
         }
         
-        return array();
+        return $this->_checkPatches();
     }
 }

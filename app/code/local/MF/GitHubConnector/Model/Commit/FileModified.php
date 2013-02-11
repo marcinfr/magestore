@@ -8,6 +8,7 @@ class MF_GitHubConnector_Model_Commit_FileModified extends MF_GitHubConnector_Mo
     protected function _publish()
     {
         $this->_doCopy();
+        $this->_saveResultFile();
     }
     
     protected function _revertChanges()

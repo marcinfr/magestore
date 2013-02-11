@@ -8,13 +8,14 @@ class MF_GitHubConnector_Model_Commit_FileRemoved extends MF_GitHubConnector_Mod
     protected function _publish()
     {
         $this->_doCopy();
+        $this->_removeSourceFile();
     }
     
     protected function _revertChanges()
     {
     }
  
-    protected function _checkRemovedFile()
+    protected function _checkConflicts()
     {
         $path = $this->getFilepath();
 
@@ -28,7 +29,7 @@ class MF_GitHubConnector_Model_Commit_FileRemoved extends MF_GitHubConnector_Mod
             return array($conflict);
         }
         
-        return array();
+        return $this->_checkPatches();
     }
 
 }

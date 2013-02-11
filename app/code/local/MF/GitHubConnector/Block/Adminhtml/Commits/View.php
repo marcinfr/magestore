@@ -25,7 +25,7 @@ class MF_GitHubConnector_Block_Adminhtml_Commits_View extends Mage_Adminhtml_Blo
         if (!$this->getCommit()->isPublished()) {
             $this->_addButton('set_as_published', array(
                 'label'     => Mage::helper('mf_gitHubConnector')->__('Set As Published'),
-                'onclick'   => "setLocation('{$this->getUrl('*/*/')}')",
+                'onclick'   => "setLocation('{$this->getUrl('*/*/setAsPublished', array('id' => $this->getCommit()->getId()))}')",
             ));
         
             if (!$this->getCommit()->getConnectionError()) {

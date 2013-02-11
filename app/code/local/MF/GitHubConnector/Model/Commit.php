@@ -35,7 +35,7 @@ class MF_GitHubConnector_Model_Commit extends Mage_Core_Model_Abstract
             try{
                 $file->publish();
             } catch (Exception $e) {
-                $this->_revertChanges($publishedFiles);
+                $this->_restoreFiles($publishedFiles);
                 Mage::throwException(Mage::helper('mf_gitHubConnector')->__('Cannot publish: ') . $e->getMessage());
             } catch (Exception $ee) {
                 Mage::throwException(Mage::helper('mf_gitHubConnector')->__('Cannot publish: ') . $e->getMessage() . ' ' . $ee->getMessage());
@@ -58,9 +58,20 @@ class MF_GitHubConnector_Model_Commit extends Mage_Core_Model_Abstract
     {
         foreach($files as $file) {
             try {
-                $file->revertChanges($this);
+                $file->revertChanges();
             } catch (Exception $e) {
                 Mage::throwException(Mage::helper('mf_gitHubConnector')->__('Cannot revert changes in file') . ' ' . $file->getFilename() . ': ' . $e->getMessage());
+            }
+        }
+    }
+    
+    protected function _restoreFiles($files)
+    {
+        foreach($files as $file) {
+            try {
+                $file->restoreFile();
+            } catch (Exception $e) {
+                Mage::throwException($e->getMessage());
             }
         }
     }
@@ -157,7 +168,7 @@ class MF_GitHubConnector_Model_Commit extends Mage_Core_Model_Abstract
     
     public function setAsPublished($status)
     {
-        //$this->setStatus($status);
+        $this->setStatus($status);
         
         $user = Mage::getSingleton('admin/session')->getUser();
         if ($user) {
