@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Alekseon_BackgroundTasks>
+            <active>true</active>
+            <codePool>local</codePool>
+            <depends>
+                <Alekseon_DataFlow />
+            </depends>
+        </Alekseon_BackgroundTasks>
+    </modules>
+</config>

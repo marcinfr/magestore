@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Alekseon_BackgroundTasks>
+            <version>0.1.0</version>
+        </Alekseon_BackgroundTasks>
+    </modules>
+</config>

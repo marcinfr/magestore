@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Alekseon_DataFlow>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Alekseon_DataFlow>
+    </modules>
+</config>

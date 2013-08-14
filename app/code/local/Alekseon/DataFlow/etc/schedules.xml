@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<config>
+    <schedules>
+        <import_test>
+            <profile>alekseon_dataFlow/dataFlow_profile_test</profile>
+        </import_test>
+        <export_test>
+            <profile>alekseon_dataFlow/dataFlow_profile_test</profile>
+            <name>export test</name>
+            <status>1</status>
+        </export_test>
+        <test>
+            <profile>alekseon_dataFlow/dataFlow_profile_test</profile>
+        </test>
+    </schedules>
+</config>

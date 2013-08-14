@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config>
+    <schedules>
+        <background_tasks>
+            <profile>alekseon_backgroundTasks/dataFlow_profile</profile>
+        </background_tasks>
+    </schedules>
+</config>
