@@ -2,8 +2,7 @@
 
 class Alekseon_DataFlow_Model_ScheduleCreator extends Mage_Core_Model_Abstract
 {
-
-    public function create($scheduleCode)
+    protected function _getScheduleConfig($scheduleCode)
     {
         $config = Mage::getSingleton('alekseon_dataFlow/config');
         $schedules = $config->getSchedules();
@@ -14,18 +13,26 @@ class Alekseon_DataFlow_Model_ScheduleCreator extends Mage_Core_Model_Abstract
             Mage::throwException('Cannot find base configuration for schedule ' . $scheduleCode);
             return;
         }
-
-        $newSchedule = Mage::getModel('alekseon_dataFlow/schedule')->load($scheduleCode, 'code');
-        if (!$newSchedule->getId()) {
-            foreach($scheduleConfig as $field => $value) {
-                $newSchedule->setData($field, $value);
-            }
-        
-            $newSchedule->setCode($scheduleCode);
-            $newSchedule->save();
-        }
-        
-        return $newSchedule;
+        return $scheduleConfig;
     }
 
+    public function create($scheduleCode)
+    {
+        $scheduleConfig = $this->_getScheduleConfig($scheduleCode);
+
+        $schedule = Mage::getModel('alekseon_dataFlow/schedule')->load($scheduleCode, 'code');
+        if (!$schedule->getId()) {
+            foreach($scheduleConfig as $field => $value) {
+                if (is_array($value)) {
+                    $value = serialize($value);
+                }
+                $schedule->setData($field, $value);
+            }
+        
+            $schedule->setCode($scheduleCode);
+            $schedule->save();
+        }        
+        
+        return $schedule;
+    }
 }

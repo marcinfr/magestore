@@ -33,10 +33,10 @@ class Alekseon_DataFlow_Model_Mysql4_Schedule_Collection extends Mage_Core_Model
             foreach($notLoadedSchedulesCodes as $scheduleCode) {
                 Mage::getSingleton('alekseon_dataFlow/scheduleCreator')->create($scheduleCode);
             }
-            $this->_reset();
+            $this->clear();
             parent::load();
         }
-        
+      
         $this->_setIsLoaded();
         
         return $this;

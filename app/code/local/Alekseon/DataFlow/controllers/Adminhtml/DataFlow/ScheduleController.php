@@ -2,7 +2,7 @@
 
 class Alekseon_DataFlow_Adminhtml_DataFlow_ScheduleController extends Mage_Adminhtml_Controller_Action
 {
-    public function _initSchedule()
+    protected function _initSchedule()
     {
         $scheduleId = $this->getRequest()->getParam('id');
         $schedule = Mage::getModel('alekseon_dataFlow/schedule');
@@ -50,5 +50,41 @@ class Alekseon_DataFlow_Adminhtml_DataFlow_ScheduleController extends Mage_Admin
         );
             
         $this->renderLayout();
+    }
+    
+    public function saveAction()
+    {
+        $data = $this->getRequest()->getPost();
+        if ($data) {
+            $schedule = $this->_initSchedule();            
+            try {
+                $schedule->setData($data);
+                $schedule->save();
+                
+                var_dump($schedule->getId());
+                // save configuration
+                if (isset($data['schedule_config'])) {
+                    foreach($data['schedule_config'] as $profileCode => $configs) {
+                        foreach($configs as $elementId => $value) {
+                            $config = $schedule->getScheduleConfig($profileCode, $elementId, true);
+                            $config->setValue($value);
+                            
+                            if (!$config->getScheduleId()) {
+                                $config->setScheduleId($schedule->getId());
+                            }
+
+                            $config->save();
+                        }
+                    }
+                }
+                
+                $this->_getSession()->addSuccess(Mage::helper('alekseon_dataFlow')->__('Schedule has been saved.'));
+            } catch (Exception $e) {
+                $this->_getSession()->addError($e->getMessage());
+                $this->_redirect('*/*/edit', array('id' => $schedule->getId()));
+                return;
+            }
+        }
+        $this->_redirect('*/*/');
     }
 }

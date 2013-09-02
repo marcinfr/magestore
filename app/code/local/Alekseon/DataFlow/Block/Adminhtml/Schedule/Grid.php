@@ -31,6 +31,7 @@ class Alekseon_DataFlow_Block_Adminhtml_Schedule_Grid extends Mage_Adminhtml_Blo
     protected function _prepareCollection()
     {
         $collection = Mage::getModel('alekseon_dataFlow/schedule')->getCollection();
+        $collection->load();
         $this->setCollection($collection);
 
         return parent::_prepareCollection();

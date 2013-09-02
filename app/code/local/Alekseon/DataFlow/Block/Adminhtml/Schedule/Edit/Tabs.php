@@ -6,10 +6,22 @@ class Alekseon_DataFlow_Block_Adminhtml_Schedule_Edit_Tabs extends Mage_Adminhtm
     {
         parent::__construct();
         $this->setId('schedule_tabs');
-        $this->setDestElementId('schedule_form');
+        $this->setDestElementId('edit_form');
     }
 
     protected function _beforeToHtml()
+    {
+        $this->_addGeneralTab();
+        $this->_addConfigurationTab();
+        $this->_addExecutionsTab();
+        $this->_addHistoryTab();       
+        $this->_addStatsTab();
+        $this->_addConsoleTab();
+
+        return parent::_beforeToHtml();
+    }
+    
+    protected function _addGeneralTab()
     {
         $this->addTab(
             'general_settings',
@@ -23,52 +35,77 @@ class Alekseon_DataFlow_Block_Adminhtml_Schedule_Edit_Tabs extends Mage_Adminhtm
                     ->toHtml(),
             )
         );
-        
+    }
+    
+    protected function _addConfigurationTab()
+    {
         $this->addTab(
-            'parameters',
+            'configuration',
             array(
-                'label'     => $this->__('Parameters'),
-                'title'     => $this->__('Parameters'),
-                'content'   => '',
+                'label'     => $this->__('Configuration'),
+                'title'     => $this->__('Configuration'),
+                'content'   => $this->getLayout()
+                    ->createBlock(
+                        'alekseon_dataFlow/adminhtml_schedule_edit_tabs_configuration'
+                    )
+                    ->toHtml(),
             )
         );
-        
+    }
+    
+    protected function _addExecutionsTab()
+    {
         $this->addTab(
             'executions',
             array(
                 'label'     => $this->__('Executions'),
                 'title'     => $this->__('Executions'),
-                'content'   => '',
+                'content'   => $this->getLayout()
+                    ->createBlock(
+                        'alekseon_dataFlow/adminhtml_schedule_edit_tabs_executions'
+                    )
+                    ->toHtml(),
             )
         );
-        
+    }
+    
+    protected function _addHistoryTab()
+    {
         $this->addTab(
             'history',
             array(
                 'label'     => $this->__('History'),
                 'title'     => $this->__('History'),
-                'content'   => '',
+                'content'   => 'Not implemented.',
             )
         );
-        
+    }
+     
+    protected function _addStatsTab()
+    {
         $this->addTab(
             'statistics',
             array(
                 'label'     => $this->__('Statistics'),
                 'title'     => $this->__('Statistics'),
-                'content'   => '',
+                'content'   => 'Not implemented.',
             )
         );
-        
+    }
+    
+    protected function _addConsoleTab()
+    {    
         $this->addTab(
-            'run',
+            'manual_run',
             array(
-                'label'     => $this->__('Run'),
-                'title'     => $this->__('Run'),
-                'content'   => '',
+                'label'     => $this->__('Console'),
+                'title'     => $this->__('Console'),
+                'content'   => $this->getLayout()
+                    ->createBlock(
+                        'alekseon_dataFlow/adminhtml_schedule_edit_tabs_console'
+                    )
+                    ->toHtml(),
             )
         );
-
-        return parent::_beforeToHtml();
     }
 }

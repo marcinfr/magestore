@@ -6,13 +6,12 @@ class Alekseon_DataFlow_Block_Adminhtml_Schedule_Edit_Form extends Mage_Adminhtm
     {
         $form = new Varien_Data_Form(
             array(
-                'id'      => 'schedule_form',
+                'id'      => 'edit_form',
                 'action'  => $this->getUrl(
                     '*/*/save',
                     array('id' => $this->getRequest()->getParam('id'))
                 ),
-                'method'  => 'post',
-                'enctype' => 'multipart/form-data'
+                'method'  => 'post'
             )
         );
 

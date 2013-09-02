@@ -2,7 +2,8 @@
 <config>
     <schedules>
         <background_tasks>
-            <profile>alekseon_backgroundTasks/dataFlow_profile</profile>
+            <default>
+            </default>
         </background_tasks>
     </schedules>
 </config>

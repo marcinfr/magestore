@@ -24,7 +24,15 @@
             <alekseon_dataflow_mysql4>
                 <class>Alekseon_DataFlow_Model_Mysql4</class>
 				<entities>
-                    <alekseon_dataflow_shedule><table>alekseon_dataflow_shedule</table></alekseon_dataflow_shedule>
+                    <alekseon_dataflow_schedule>
+                        <table>alekseon_dataflow_schedule</table>
+                    </alekseon_dataflow_schedule>
+                    <alekseon_dataflow_schedule_configuration>
+                        <table>alekseon_dataflow_schedule_configuration</table>
+                    </alekseon_dataflow_schedule_configuration>
+                    <alekseon_dataflow_schedule_execution>
+                        <table>alekseon_dataflow_schedule_execution</table>
+                    </alekseon_dataflow_schedule_execution>
                 </entities>
             </alekseon_dataflow_mysql4>  
         </models>
